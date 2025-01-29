@@ -47,6 +47,59 @@
                 <span v-if="errors.beds" class="error">{{ errors.beds }}</span>
             </div>
 
+            <!-- superhost -->
+            <div class="superhost">
+                <p>Is host <b>superhost</b>?</p>
+                <button
+                    v-for="host in superhosts"
+                    :key="host"
+                    @click.prevent="selectHost(host)"
+                    :class="{selected: superhost === host}"
+                >
+                    {{ host }}
+                </button>
+            </div>
+
+            <!-- multiple room -->
+            <div class="multi">
+                <p>Is the room <b>multiple</b> room?</p>
+                <button
+                    v-for="multi in multiples"
+                    :key="multi"
+                    @click.prevent="selectMulti(multi)"
+                    :class="{selected: multiple === multi}"
+                >
+                    {{ multi }}
+                </button>
+
+            </div>
+
+            <!-- bisnis room -->
+            <div class="biz">
+                <p>Is the room for <b>business</b>?</p>
+                <button
+                    v-for="biz in bussiness"
+                    :key="biz"
+                    @click.prevent="selectBusiness(biz)"
+                    :class="{selected: buss === biz}"
+                >
+                    {{ biz }}
+                </button>
+            </div>
+
+            <!-- Distance from city center -->
+            <div class="city-center">
+                <p>How far is it from the city center?</p>
+                <input
+                    type="number"
+                    v-model="cityDistance"
+                    min="1"
+                    max="10"
+                    placeholder="Enter distance in km"
+                />
+                <span v-if="errors.cityDistance" class="error">{{ errors.cityDistance }}</span>
+            </div>
+
             <!-- Tourist Attraction Rate -->
             <div class="attr">
                 <p>How would you rate the proximity to tourist attractions? (1-10)</p>
@@ -97,6 +150,19 @@
                 <span v-if="errors.coordinates" class="error">{{ errors.coordinates }}</span>
             </div>
 
+            <!-- weekend -->
+            <div class="weekend">
+                <p>Is the room available on the <b>weekend</b>?</p>
+                <button
+                    v-for="week in weeks"
+                    :key="week"
+                    @click.prevent="selectWeekend(week)"
+                    :class="{selected: weekend === week}"
+                >
+                    {{ week }}
+                </button>
+            </div>
+
             <!-- Submit Button -->
             <button type="submit" class="submit-btn">Submit Room Details</button>
         </form>
@@ -110,13 +176,22 @@ export default {
             location: null,
             roomType: null,
             beds: '',
+            cityDistance: '',
             attractionRate: '',
             restaurantProximity: '',
             latitude: '',
             longitude: '',
+            superhost: null,
+            multiple: null,
+            buss: null,
+            weekend: null,
             errors: {},
             cities: ['Athens', 'Berlin', 'Barcelona', 'Budapest', 'Lisbon', 'London', 'Paris', 'Rome', 'Vienna'],
             roomTypes: ['Private', 'Shared'],
+            superhosts: ['Yes', 'No'],
+            multiples: ['Yes', 'No'],
+            bussiness: ['Yes', 'No'],
+            weeks: ['Yes', 'No']
         };
     },
     methods: {
@@ -125,6 +200,18 @@ export default {
         },
         selectRoomType(type) {
             this.roomType = type;
+        },
+        selectHost(host) {
+            this.superhost = host;
+        },
+        selectMulti(multi) {
+            this.multiple = multi;
+        },
+        selectBusiness(biz){
+            this.buss = biz;
+        },
+        selectWeekend(week){
+            this.weekend = week;
         },
         validateForm() {
             this.errors = {};
@@ -138,6 +225,8 @@ export default {
                 this.errors.restaurantProximity = 'Please rate proximity to restaurants between 1 and 10.';
             if (!this.latitude || !this.longitude)
                 this.errors.coordinates = 'Please provide valid latitude and longitude.';
+            if (!this.cityDistance)
+                this.errors.cityDistance = 'Please provide distance in km.';
             return Object.keys(this.errors).length === 0;
         },
         handleSubmit() {
