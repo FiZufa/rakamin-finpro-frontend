@@ -281,7 +281,7 @@ export default {
 
                 console.log("Sending payload:", payload);
 
-                axios.post("http://127.0.0.1:8000/predict", payload)
+                axios.post("http://127.0.0.1:8000/predict/", payload)
                     .then(response => {
                         console.log("Prediction response:", response.data);
                         // alert(`Predicted price: ${response.data.prediction}`);
