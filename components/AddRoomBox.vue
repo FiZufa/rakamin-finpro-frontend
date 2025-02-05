@@ -163,15 +163,22 @@
             <button type="submit" class="submit-btn">Submit Room Details</button>
 
             <!-- Prediction Output -->
-            <div v-if="prediction !== null" class="prediction-box">
+            <!-- <div v-if="prediction !== null" class="prediction-box">
                 <p>Estimated Price: <b>{{ prediction }}</b></p>
-            </div>
+            </div> -->
+                <!-- Prediction Popup -->
+            <PredictBox 
+                v-if="showPopup" 
+                :predicted_price="prediction"
+                @close="showPopup = false" 
+            />
         </form>
     </div>
 </template>
 
 <script>
 import axios from "axios";
+import PredictBox from "./PredictBox.vue";
 
 export default {
     data() {
@@ -195,7 +202,8 @@ export default {
             superhosts: ['Yes', 'No'],
             multiples: ['Yes', 'No'],
             businessOptions: ['Yes', 'No'],
-            weekendOptions: ['Yes', 'No']
+            weekendOptions: ['Yes', 'No'],
+            showPopup: false
         };
     },
     methods: {
@@ -276,13 +284,16 @@ export default {
                 axios.post("http://127.0.0.1:8000/predict", payload)
                     .then(response => {
                         console.log("Prediction response:", response.data);
-                        alert(`Predicted price: ${response.data.prediction}`);
+                        // alert(`Predicted price: ${response.data.prediction}`);
+                        this.prediction = response.data.prediction;
+                        this.showPopup = true; // Show the popup after prediction is received
                     })
                     .catch(error => {
                         console.error("Error making prediction:", error);
                     });
             }
-}
+        },
+        
 
     }
 };

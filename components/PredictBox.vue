@@ -1,12 +1,12 @@
 <template>
     <div class="overlay">
       <div class="predict-box">
-        <p>The predicted price is <span class="price">{{ predicted_price }}</span></p>
+        <p>The predicted price is <span class="price">€{{ formattedPrice }}</span></p>
         <p>Rent the room with this predicted price?</p>
         <div class="button-group">
+            <button class="rent-now-btn">Yes, rent now</button>
           <button class="set-price-btn">No, set my own price</button>
-          <button class="rent-now-btn">Yes, rent now</button>
-          <button class="cancel-btn">Cancel</button>
+          <button class="cancel-btn" @click="$emit('close')">Cancel</button>
         </div>
       </div>
     </div>
@@ -15,26 +15,31 @@
   <script>
   export default {
     props: {
-      predicted_price: Number // Accept predicted price as a prop
+      predicted_price: Number
+    },
+    computed: {
+    formattedPrice() {
+      return this.predicted_price ? this.predicted_price.toFixed(2) : "0.00";
     }
+  }
   };
   </script>
   
   <style>
-  /* Background overlay to darken the screen */
+  /* Centered popup with overlay */
   .overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+    background: rgba(0, 0, 0, 0.5);
     display: flex;
     justify-content: center;
     align-items: center;
   }
   
-  /* Centered pop-up box */
+  /* Styled pop-up box */
   .predict-box {
     background: white;
     padding: 20px;
@@ -42,17 +47,15 @@
     width: 350px;
     text-align: center;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-    animation: fadeIn 0.3s ease-in-out;
   }
-  
-  /* Predicted price styling */
+
   .price {
-    font-weight: bold;
     color: #FF385C;
-    font-size: 1.5rem;
+    font-weight: bold;
+    font-size: 20px;
   }
   
-  /* Button styles */
+  /* Button styling */
   .button-group {
     display: flex;
     flex-direction: column;
@@ -61,17 +64,15 @@
   }
   
   button {
-    padding: 10px 15px;
+    padding: 10px;
     border: none;
     border-radius: 8px;
-    font-size: 1rem;
     cursor: pointer;
     transition: all 0.3s;
   }
   
   .set-price-btn {
     background: #FFCC00;
-    color: black;
   }
   
   .rent-now-btn {
@@ -81,23 +82,10 @@
   
   .cancel-btn {
     background: #ccc;
-    color: black;
   }
   
   button:hover {
     opacity: 0.8;
-  }
-  
-  /* Fade-in animation */
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(-20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
   }
   </style>
   
