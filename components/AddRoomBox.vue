@@ -47,47 +47,46 @@
                 <span v-if="errors.beds" class="error">{{ errors.beds }}</span>
             </div>
 
-            <!-- superhost -->
+            <!-- Superhost -->
             <div class="superhost">
-                <p>Is host <b>superhost</b>?</p>
+                <p>Is the host a <b>superhost</b>?</p>
                 <button
                     v-for="host in superhosts"
                     :key="host"
                     @click.prevent="selectHost(host)"
-                    :class="{selected: superhost === host}"
+                    :class="{ selected: superhost === host }"
                 >
                     {{ host }}
                 </button>
             </div>
 
-            <!-- multiple room -->
+            <!-- Multiple Room -->
             <div class="multi">
-                <p>Is the room <b>multiple</b> room?</p>
+                <p>Is this a <b>multiple</b> room?</p>
                 <button
                     v-for="multi in multiples"
                     :key="multi"
                     @click.prevent="selectMulti(multi)"
-                    :class="{selected: multiple === multi}"
+                    :class="{ selected: multiple === multi }"
                 >
                     {{ multi }}
                 </button>
-
             </div>
 
-            <!-- bisnis room -->
+            <!-- Business Room -->
             <div class="biz">
                 <p>Is the room for <b>business</b>?</p>
                 <button
-                    v-for="biz in bussiness"
+                    v-for="biz in businessOptions"
                     :key="biz"
                     @click.prevent="selectBusiness(biz)"
-                    :class="{selected: buss === biz}"
+                    :class="{ selected: business === biz }"
                 >
                     {{ biz }}
                 </button>
             </div>
 
-            <!-- Distance from city center -->
+            <!-- Distance from City Center -->
             <div class="city-center">
                 <p>How far is it from the city center?</p>
                 <input
@@ -110,7 +109,6 @@
                     max="10"
                     placeholder="Enter a rating"
                 />
-                <span v-if="errors.attractionRate" class="error">{{ errors.attractionRate }}</span>
             </div>
 
             <!-- Proximity to Restaurants -->
@@ -123,7 +121,6 @@
                     max="10"
                     placeholder="Enter a rating"
                 />
-                <span v-if="errors.restaurantProximity" class="error">{{ errors.restaurantProximity }}</span>
             </div>
 
             <!-- Coordinates -->
@@ -147,17 +144,16 @@
                         placeholder="Enter longitude"
                     />
                 </div>
-                <span v-if="errors.coordinates" class="error">{{ errors.coordinates }}</span>
             </div>
 
-            <!-- weekend -->
+            <!-- Weekend Availability -->
             <div class="weekend">
                 <p>Is the room available on the <b>weekend</b>?</p>
                 <button
-                    v-for="week in weeks"
+                    v-for="week in weekendOptions"
                     :key="week"
                     @click.prevent="selectWeekend(week)"
-                    :class="{selected: weekend === week}"
+                    :class="{ selected: weekend === week }"
                 >
                     {{ week }}
                 </button>
@@ -165,11 +161,18 @@
 
             <!-- Submit Button -->
             <button type="submit" class="submit-btn">Submit Room Details</button>
+
+            <!-- Prediction Output -->
+            <div v-if="prediction !== null" class="prediction-box">
+                <p>Estimated Price: <b>{{ prediction }}</b></p>
+            </div>
         </form>
     </div>
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
     data() {
         return {
@@ -183,15 +186,16 @@ export default {
             longitude: '',
             superhost: null,
             multiple: null,
-            buss: null,
+            business: null,
             weekend: null,
             errors: {},
+            prediction: null,
             cities: ['Athens', 'Berlin', 'Barcelona', 'Budapest', 'Lisbon', 'London', 'Paris', 'Rome', 'Vienna'],
             roomTypes: ['Private', 'Shared'],
             superhosts: ['Yes', 'No'],
             multiples: ['Yes', 'No'],
-            bussiness: ['Yes', 'No'],
-            weeks: ['Yes', 'No']
+            businessOptions: ['Yes', 'No'],
+            weekendOptions: ['Yes', 'No']
         };
     },
     methods: {
@@ -207,10 +211,10 @@ export default {
         selectMulti(multi) {
             this.multiple = multi;
         },
-        selectBusiness(biz){
-            this.buss = biz;
+        selectBusiness(biz) {
+            this.business = biz;
         },
-        selectWeekend(week){
+        selectWeekend(week) {
             this.weekend = week;
         },
         validateForm() {
@@ -229,13 +233,58 @@ export default {
                 this.errors.cityDistance = 'Please provide distance in km.';
             return Object.keys(this.errors).length === 0;
         },
-        handleSubmit() {
-            if (this.validateForm()) {
-                alert('Form submitted successfully!');
-                // Handle form data submission here
+        computed: {
+            roomTypePrivate() {
+                return this.roomType === 'Private' ? 1 : 0;
+            },
+            roomTypeShared() {
+                return this.roomType === 'Shared' ? 1 : 0;
             }
         },
-    },
+        handleSubmit() {
+            if (this.validateForm()) {
+                const payload = {
+                    room_shared: this.roomType === 'Shared' ? 1 : 0,
+                    room_private: this.roomType === 'Private' ? 1 : 0,
+                    person_capacity: parseInt(this.beds),
+                    host_is_superhost: this.superhost === 'Yes' ? 1 : 0,
+                    multi: this.multiple === 'Yes' ? 1 : 0,
+                    biz: this.buss === 'Yes' ? 1 : 0,
+                    bedrooms: parseInt(this.beds),  // Assuming 'bedrooms' is the same as beds
+                    dist: parseFloat(this.cityDistance),
+                    metro_dist: parseFloat(this.cityDistance), // If metro_dist is different, update accordingly
+                    attr_index_norm: parseFloat(this.attractionRate),
+                    rest_index_norm: parseFloat(this.restaurantProximity),
+                    lng: parseFloat(this.longitude),
+                    lat: parseFloat(this.latitude),
+                    is_weekend: this.weekend === 'Yes' ? 1 : 0,
+                    room_type_Private_room: this.roomType === 'Private' ? 1 : 0,
+                    room_type_Shared_room: this.roomType === 'Shared' ? 1 : 0,
+                    city_Athens: this.location === 'Athens' ? 1 : 0,
+                    city_Barcelona: this.location === 'Barcelona' ? 1 : 0,
+                    city_Berlin: this.location === 'Berlin' ? 1 : 0,
+                    city_Budapest: this.location === 'Budapest' ? 1 : 0,
+                    city_Lisbon: this.location === 'Lisbon' ? 1 : 0,
+                    city_London: this.location === 'London' ? 1 : 0,
+                    city_Paris: this.location === 'Paris' ? 1 : 0,
+                    city_Rome: this.location === 'Rome' ? 1 : 0,
+                    city_Vienna: this.location === 'Vienna' ? 1 : 0,
+                };
+
+                console.log("Sending payload:", payload);
+
+                axios.post("http://127.0.0.1:8000/predict", payload)
+                    .then(response => {
+                        console.log("Prediction response:", response.data);
+                        alert(`Predicted price: ${response.data.prediction}`);
+                    })
+                    .catch(error => {
+                        console.error("Error making prediction:", error);
+                    });
+            }
+}
+
+    }
 };
 </script>
 
