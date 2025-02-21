@@ -50,7 +50,8 @@
             <!-- Superhost -->
             <div class="superhost">
                 <p>Is the host a <b>superhost</b>?</p>
-                <button
+                <div class="options">
+                    <button
                     v-for="host in superhosts"
                     :key="host"
                     @click.prevent="selectHost(host)"
@@ -58,12 +59,15 @@
                 >
                     {{ host }}
                 </button>
+                </div>
+                
             </div>
 
             <!-- Multiple Room -->
             <div class="multi">
                 <p>Is this a <b>multiple</b> room?</p>
-                <button
+                <div class="options">
+                    <button
                     v-for="multi in multiples"
                     :key="multi"
                     @click.prevent="selectMulti(multi)"
@@ -71,12 +75,15 @@
                 >
                     {{ multi }}
                 </button>
+                </div>
+                
             </div>
 
             <!-- Business Room -->
             <div class="biz">
                 <p>Is the room for <b>business</b>?</p>
-                <button
+                <div class="options">
+                    <button
                     v-for="biz in businessOptions"
                     :key="biz"
                     @click.prevent="selectBusiness(biz)"
@@ -84,6 +91,8 @@
                 >
                     {{ biz }}
                 </button>
+                </div>
+                
             </div>
 
             <!-- Distance from City Center -->
@@ -149,7 +158,8 @@
             <!-- Weekend Availability -->
             <div class="weekend">
                 <p>Is the room available on the <b>weekend</b>?</p>
-                <button
+                <div class="options">
+                    <button
                     v-for="week in weekendOptions"
                     :key="week"
                     @click.prevent="selectWeekend(week)"
@@ -157,6 +167,7 @@
                 >
                     {{ week }}
                 </button>
+                </div>
             </div>
 
             <!-- Submit Button -->
