@@ -124,7 +124,7 @@
             </div>
 
             <!-- Coordinates -->
-            <div class="coordinate">
+            <!-- <div class="coordinate">
                 <p>Please specify the coordinates:</p>
                 <div class="lat-sec">
                     <p>Latitude:</p>
@@ -144,7 +144,7 @@
                         placeholder="Enter longitude"
                     />
                 </div>
-            </div>
+            </div> -->
 
             <!-- Weekend Availability -->
             <div class="weekend">
@@ -189,8 +189,6 @@ export default {
             cityDistance: '',
             attractionRate: '',
             restaurantProximity: '',
-            latitude: '',
-            longitude: '',
             superhost: null,
             multiple: null,
             business: null,
@@ -235,8 +233,6 @@ export default {
                 this.errors.attractionRate = 'Please rate proximity to attractions between 1 and 10.';
             if (!this.restaurantProximity || this.restaurantProximity < 1 || this.restaurantProximity > 10)
                 this.errors.restaurantProximity = 'Please rate proximity to restaurants between 1 and 10.';
-            if (!this.latitude || !this.longitude)
-                this.errors.coordinates = 'Please provide valid latitude and longitude.';
             if (!this.cityDistance)
                 this.errors.cityDistance = 'Please provide distance in km.';
             return Object.keys(this.errors).length === 0;
@@ -263,8 +259,6 @@ export default {
                     metro_dist: parseFloat(this.cityDistance), // If metro_dist is different, update accordingly
                     attr_index_norm: parseFloat(this.attractionRate),
                     rest_index_norm: parseFloat(this.restaurantProximity),
-                    lng: parseFloat(this.longitude),
-                    lat: parseFloat(this.latitude),
                     is_weekend: this.weekend === 'Yes' ? 1 : 0,
                     room_type_Private_room: this.roomType === 'Private' ? 1 : 0,
                     room_type_Shared_room: this.roomType === 'Shared' ? 1 : 0,
