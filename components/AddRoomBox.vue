@@ -88,7 +88,7 @@
 
             <!-- Distance from City Center -->
             <div class="city-center">
-                <p>How far is it from the city center?</p>
+                <p>How far is it from the city center? (in km)</p>
                 <input
                     type="number"
                     v-model="cityDistance"
@@ -101,7 +101,7 @@
 
             <!-- Tourist Attraction Rate -->
             <div class="attr">
-                <p>How would you rate the proximity to tourist attractions? (1-10)</p>
+                <p>How would you rate the proximity to tourist attractions?</p>
                 <input
                     type="number"
                     v-model="attractionRate"
@@ -113,7 +113,7 @@
 
             <!-- Proximity to Restaurants -->
             <div class="rest">
-                <p>How would you rate the proximity to restaurants? (1-10)</p>
+                <p>How would you rate the proximity to restaurants?</p>
                 <input
                     type="number"
                     v-model="restaurantProximity"
@@ -297,6 +297,8 @@ export default {
 .add-room-box {
     max-width: 600px;
     margin: 0 auto;
+    margin-top: 3%;
+    margin-bottom: 5%;
     padding: 20px;
     border: 1px solid #ddd;
     border-radius: 10px;
@@ -342,7 +344,7 @@ button.selected {
 }
 
 input {
-    width: 100%;
+    width: 95%;
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 5px;
