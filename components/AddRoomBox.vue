@@ -240,9 +240,9 @@ export default {
             if (!this.roomType) this.errors.roomType = 'Please select a room type.';
             if (!this.beds || this.beds <= 0)
                 this.errors.beds = 'Please enter a valid number of beds.';
-            if (!this.attractionRate || this.attractionRate < 1 || this.attractionRate > 10)
+            if (!this.attractionRate || this.attractionRate < 1 || this.attractionRate > 1000)
                 this.errors.attractionRate = 'Please rate proximity to attractions between 1 and 10.';
-            if (!this.restaurantProximity || this.restaurantProximity < 1 || this.restaurantProximity > 10)
+            if (!this.restaurantProximity || this.restaurantProximity < 1 || this.restaurantProximity > 1000)
                 this.errors.restaurantProximity = 'Please rate proximity to restaurants between 1 and 10.';
             if (!this.cityDistance)
                 this.errors.cityDistance = 'Please provide distance in km.';
